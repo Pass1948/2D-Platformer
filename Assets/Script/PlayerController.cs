@@ -10,10 +10,12 @@ public class PlayerController : MonoBehaviour
     private Animator anima;
     private SpriteRenderer render;
 
+    [SerializeField] LayerMask groundLayer;
+
     [SerializeField] private float speed;
     [SerializeField] private float maxSpeed;
     [SerializeField] private float jumpPower;
-    private bool isJump;
+    private bool isGround;
 
     private void Awake()
     {
@@ -26,6 +28,12 @@ public class PlayerController : MonoBehaviour
     {
         Move();
     }
+
+    private void FixedUpdate()
+    {
+        GroundCheck();
+    }
+
 
     private void Move()
     {
@@ -41,7 +49,7 @@ public class PlayerController : MonoBehaviour
         float h = Input.GetAxisRaw("Horizontal");
         rd.AddForce(Vector2.right * h * speed, ForceMode2D.Force);
 
-        if (moveVec.x < 0 && rd.velocity.x < maxSpeed*(-1))
+        if (moveVec.x < 0 && rd.velocity.x < maxSpeed * (-1))
             rd.velocity = new Vector2(maxSpeed * (-1), rd.velocity.y);
         else if (moveVec.x > 0 && rd.velocity.x > maxSpeed)
             rd.velocity = new Vector2(maxSpeed, rd.velocity.y);
@@ -66,7 +74,7 @@ public class PlayerController : MonoBehaviour
 
     void Jump()
     {
-        if (!isJump)
+        if (isGround)
         {
             rd.AddForce(Vector2.up * jumpPower, ForceMode2D.Impulse);
         }
@@ -77,18 +85,49 @@ public class PlayerController : MonoBehaviour
         Jump();
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void GroundCheck()
     {
-        anima.SetBool("IsGround", true);
-        isJump = false;
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector3.down, 1.5f, groundLayer);
+        
+        if (hit.collider != null)
+        {
+            //Debug.Log(hit.collider.gameObject.name);
+            isGround = true; 
+            anima.SetBool("IsGround", true);
+            Debug.DrawRay(transform.position, new Vector3(hit.point.x, hit.point.y, 0) - transform.position, Color.red);
+        }
+        else
+        {
+            isGround = false;
+            anima.SetBool("IsGround", false);
+            Debug.DrawRay(transform.position, Vector3.down * 1.5f, Color.green);
+        }
     }
 
-    private void OnCollisionExit2D(Collision2D collision)
+
+    // 몬스터랑 충돌할 경우 1
+    /*
+    private void OnCollisionEnter2D(Collision2D collision)
     {
-        anima.SetBool("IsGround", false);
-        isJump = true;
+        if (collision.gameObject.layer == LayerMask.GetMask("Monster");
     }
-    
+    */
+
+
+    // 점프 무한 방지법 1
+    /*
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        isGround = true;                        // 땅에 있을경우 bool형 체크
+        anima.SetBool("IsGround", true);        // 애니메이션
+
+    }
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        isGround = false;
+        anima.SetBool("IsGround", false); 
+    }
+    */
 }
-    
+
 
