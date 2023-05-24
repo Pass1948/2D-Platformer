@@ -11,7 +11,7 @@ public class PlayerController : MonoBehaviour
     private SpriteRenderer render;
 
     [SerializeField] LayerMask groundLayer;
-
+ 
     [SerializeField] private float speed;
     [SerializeField] private float maxSpeed;
     [SerializeField] private float jumpPower;
@@ -53,8 +53,6 @@ public class PlayerController : MonoBehaviour
             rd.velocity = new Vector2(maxSpeed * (-1), rd.velocity.y);
         else if (moveVec.x > 0 && rd.velocity.x > maxSpeed)
             rd.velocity = new Vector2(maxSpeed, rd.velocity.y);
-
-
     }
 
     private void OnMove(InputValue value)
@@ -106,12 +104,18 @@ public class PlayerController : MonoBehaviour
 
 
     // 몬스터랑 충돌할 경우 1
-    /*
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.layer == LayerMask.GetMask("Monster");
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Monster"))
+        {
+            Debug.Log("쿵했음");
+            float h = Input.GetAxisRaw("Horizontal");
+            rd.AddForce(Vector2.right * h * 5f, ForceMode2D.Impulse);
+            rd.AddForce(Vector2.up * h * 5f, ForceMode2D.Impulse);
+
+        }
+
     }
-    */
 
 
     // 점프 무한 방지법 1

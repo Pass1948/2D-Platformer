@@ -4,12 +4,20 @@ using UnityEngine;
 
 public class Mouse : MonoBehaviour
 {
+    enum State
+    {
+        Idle,
+        Patrol,
+        Jump,
+        Hit,
+        Attack,
+    }
     private Rigidbody2D rd;
     private Animator anim;
     [SerializeField] Transform groundCheckPoint;
     [SerializeField] LayerMask groundMask;
-
-
+    private bool isJuming;
+    private bool isHited;
     [SerializeField] private float moveSpeed;
 
     private void Awake()
@@ -20,11 +28,12 @@ public class Mouse : MonoBehaviour
 
     private void Update()
     {
-        Move();
-        if (!IsGroundExist())
-        {
-            Turn();
-        }
+            Move();
+            if (!IsGroundExist())
+            {
+                Turn();
+            }
+       
     }
 
     private void FixedUpdate()
@@ -37,7 +46,10 @@ public class Mouse : MonoBehaviour
         rd.velocity = new Vector2(transform.right.x * -moveSpeed, rd.velocity.y);
     }
 
-    public void Turn() { transform.Rotate(Vector3.up, 180); }
+    public void Turn() 
+    { 
+        transform.Rotate(Vector3.up, 180); 
+    }
 
     private bool IsGroundExist()
     {
