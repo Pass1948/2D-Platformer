@@ -33,7 +33,6 @@ public class Mouse : MonoBehaviour
             {
                 Turn();
             }
-       
     }
 
     private void FixedUpdate()
@@ -43,7 +42,7 @@ public class Mouse : MonoBehaviour
 
     private void Move()
     {
-        rd.velocity = new Vector2(transform.right.x * -moveSpeed, rd.velocity.y);
+        rd.velocity = new Vector2(transform.right.x * -1 * moveSpeed, rd.velocity.y);
     }
 
     public void Turn() 
